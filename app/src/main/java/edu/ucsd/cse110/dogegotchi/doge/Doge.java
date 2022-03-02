@@ -1,6 +1,8 @@
 package edu.ucsd.cse110.dogegotchi.doge;
 
+import android.app.Activity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.common.base.Preconditions;
 
@@ -9,6 +11,7 @@ import java.util.Collection;
 import java.util.Random;
 
 import edu.ucsd.cse110.dogegotchi.daynightcycle.IDayNightCycleObserver;
+import edu.ucsd.cse110.dogegotchi.observer.IActivityObserver;
 import edu.ucsd.cse110.dogegotchi.observer.ISubject;
 import edu.ucsd.cse110.dogegotchi.ticker.ITickerObserver;
 
@@ -19,7 +22,7 @@ import edu.ucsd.cse110.dogegotchi.ticker.ITickerObserver;
  *
  * TODO: Exercise 2 -- enable {@link State#SAD} mood, and add support for {@link State#EATING} behavior.
  */
-public class Doge implements ISubject<IDogeObserver>, ITickerObserver, IDayNightCycleObserver {
+public class Doge implements ISubject<IDogeObserver>, ITickerObserver, IDayNightCycleObserver, IActivityObserver {
     /**
      * Current number of ticks. Reset after every potential mood swing.
      */
@@ -73,6 +76,10 @@ public class Doge implements ISubject<IDogeObserver>, ITickerObserver, IDayNight
             tryRandomMoodSwing();
             this.numTicks = 0;
         }
+
+        if (this.state.equals(State.EATING) && this.numTicks == 0) {
+            this.setState(State.HAPPY);
+        }
     }
 
     /**
@@ -121,6 +128,15 @@ public class Doge implements ISubject<IDogeObserver>, ITickerObserver, IDayNight
         if (newPeriod.equals(Period.DAY)) this.setState(State.HAPPY);
         else this.setState(State.SLEEPING);
     }
+
+    @Override
+    public void onFoodClick(State newState) {
+        if (newState.equals(State.EATING)) {
+            this.setState(State.EATING);
+        }
+        this.numTicks = -2;
+    }
+
 
     /**
      * Moods and actions for our doge.

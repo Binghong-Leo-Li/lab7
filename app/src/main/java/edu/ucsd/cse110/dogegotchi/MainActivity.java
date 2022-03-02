@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.dogegotchi;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -11,6 +12,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,9 @@ import java.util.Map;
 import edu.ucsd.cse110.dogegotchi.daynightcycle.DayNightCycleMediator;
 import edu.ucsd.cse110.dogegotchi.doge.Doge;
 import edu.ucsd.cse110.dogegotchi.doge.DogeView;
+import edu.ucsd.cse110.dogegotchi.doge.IDogeObserver;
+import edu.ucsd.cse110.dogegotchi.observer.IActivityObserver;
+import edu.ucsd.cse110.dogegotchi.observer.ISubject;
 import edu.ucsd.cse110.dogegotchi.sprite.Coord;
 import edu.ucsd.cse110.dogegotchi.ticker.AsyncTaskTicker;
 import edu.ucsd.cse110.dogegotchi.ticker.ITicker;
@@ -26,13 +32,25 @@ import edu.ucsd.cse110.dogegotchi.ticker.ITicker;
  * In reading this class observe how we use the xml resource files for
  * constants, instead of making them static pieces of code.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ISubject<IActivityObserver> {
 
     private ITicker ticker;
 
     private DayNightCycleMediator dayNightCycleMediator;
 
     private Doge doge;
+
+    private Collection<IActivityObserver> observers;
+
+    @Override
+    public void register(IActivityObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void unregister(IActivityObserver observer) {
+        observers.remove(observer);
+    }
 
     private DogeView dogeView;
 
@@ -95,11 +113,18 @@ public class MainActivity extends Activity {
          *
          *      3. Feed doge and update their state accordingly.
          */
+        this.observers = new ArrayList<>();
+        this.register(doge);
         final View foodMenu = this.findViewById(R.id.FoodMenuView);
         final ImageButton hamButton       = foodMenu.findViewById(R.id.HamButton),
                           steakButton     = foodMenu.findViewById(R.id.SteakButton),
                           turkeyLegButton = foodMenu.findViewById(R.id.TurkeyLegButton);
         // hm... should prob do something with this
+
+        hamButton.setOnClickListener(this::onFoodClicked1);
+        steakButton.setOnClickListener(this::onFoodClicked2);
+        turkeyLegButton.setOnClickListener(this::onFoodClicked3);
+
 
         /**
          * TODO: Exercise 3 -- Strategy & Factory
@@ -151,7 +176,7 @@ public class MainActivity extends Activity {
     private void createDoge(final int ticksPerPeriod) {
         // create Doge model
         int ticksPerMoodSwing = ticksPerPeriod/getResources().getInteger(R.integer.mood_swings_per_period);
-        double moodSwingProbability = getResources().getInteger(R.integer.mood_swing_probability)/100.0;
+        double moodSwingProbability = 80/100.0;//getResources().getInteger(R.integer.mood_swing_probability)/100.0;
         this.doge = new Doge(ticksPerMoodSwing, moodSwingProbability);
 
         // create Doge view
@@ -184,6 +209,11 @@ public class MainActivity extends Activity {
                                   getResources().getInteger(R.integer.sad_y)));
 
         // TODO: Exercise 2 - Set up sprite and coords for EATING state.
+        stateBitmaps.put(Doge.State.EATING,
+                        BitmapFactory.decodeResource(getResources(), R.drawable.eating_2x));
+        stateCoords.put(Doge.State.EATING,
+                        new Coord(getResources().getInteger(R.integer.eating_x),
+                                  getResources().getInteger(R.integer.eating_y)));
         // TODO: Exercise 3 - You may need to create the Factory of Strategies here
         this.dogeView = new DogeView(this, Doge.State.HAPPY, stateBitmaps, stateCoords);
 
@@ -202,5 +232,18 @@ public class MainActivity extends Activity {
         }
         this.ticker.stop();
         super.onDestroy();
+    }
+
+    public void onFoodClicked1(View view) {
+        this.doge.onFoodClick(Doge.State.EATING);
+        Log.i("main", "Fed Ham");
+    }
+    public void onFoodClicked2(View view) {
+        this.doge.onFoodClick(Doge.State.EATING);
+        Log.i("main", "Fed Steak");
+    }
+    public void onFoodClicked3(View view) {
+        this.doge.onFoodClick(Doge.State.EATING);
+        Log.i("main", "Fed TurkeyLeg");
     }
 }

@@ -66,7 +66,10 @@ public class DogeView
 
         if (newState.equals(Doge.State.SAD)) {
             ((Activity)this.context).findViewById(R.id.FoodMenuView).setVisibility(View.VISIBLE);
+        } else if (newState.equals(Doge.State.SLEEPING) || newState.equals(Doge.State.EATING)){
+            ((Activity)this.context).findViewById(R.id.FoodMenuView).setVisibility(View.GONE);
         }
+
         // update super sprite
         this.setSprite(this.viewsPerState.get(newState));
         this.setCoord(this.coordsPerState.get(newState));
