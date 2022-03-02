@@ -1,13 +1,17 @@
 package edu.ucsd.cse110.dogegotchi.doge;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
+import edu.ucsd.cse110.dogegotchi.MainActivity;
+import edu.ucsd.cse110.dogegotchi.R;
 import edu.ucsd.cse110.dogegotchi.sprite.BitmapSprite;
 import edu.ucsd.cse110.dogegotchi.sprite.Coord;
 
@@ -26,6 +30,8 @@ public class DogeView
      */
     private ImmutableMap<Doge.State, Bitmap> viewsPerState;
 
+    private Context context;
+
     /**
      * Lookup table for the coordinates for each state.
      */
@@ -38,6 +44,8 @@ public class DogeView
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(viewsPerState);
         Preconditions.checkNotNull(coordsPerState);
+
+        this.context = context;
 
         this.viewsPerState  = ImmutableMap.copyOf(viewsPerState);
         this.coordsPerState = ImmutableMap.copyOf(coordsPerState);
@@ -55,6 +63,10 @@ public class DogeView
     public void onStateChange(Doge.State newState) {
         checkState(newState); // x-cutting concern
 
+
+        if (newState.equals(Doge.State.SAD)) {
+            ((Activity)this.context).findViewById(R.id.FoodMenuView).setVisibility(View.VISIBLE);
+        }
         // update super sprite
         this.setSprite(this.viewsPerState.get(newState));
         this.setCoord(this.coordsPerState.get(newState));

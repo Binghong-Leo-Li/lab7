@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
          * create day night cycle tracker
          * Note: we implemented this for you, but do read the code to understand it.
          */
-        int ticksPerPeriod = 4; //getResources().getInteger(R.integer.ticks_per_period);
+        int ticksPerPeriod = 15; //getResources().getInteger(R.integer.ticks_per_period);
         this.dayNightCycleMediator = new DayNightCycleMediator(ticksPerPeriod);
         ticker.register(this.dayNightCycleMediator);
 
@@ -150,8 +150,8 @@ public class MainActivity extends Activity {
      */
     private void createDoge(final int ticksPerPeriod) {
         // create Doge model
-        int ticksPerMoodSwing = ticksPerPeriod/2; //getResources().getInteger(R.integer.mood_swings_per_period);
-        double moodSwingProbability = 50.0/100.0; //getResources().getInteger(R.integer.mood_swing_probability)/100.0;
+        int ticksPerMoodSwing = ticksPerPeriod/getResources().getInteger(R.integer.mood_swings_per_period);
+        double moodSwingProbability = getResources().getInteger(R.integer.mood_swing_probability)/100.0;
         this.doge = new Doge(ticksPerMoodSwing, moodSwingProbability);
 
         // create Doge view
