@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
          * create day night cycle tracker
          * Note: we implemented this for you, but do read the code to understand it.
          */
-        int ticksPerPeriod = getResources().getInteger(R.integer.ticks_per_period);
+        int ticksPerPeriod = 4; //getResources().getInteger(R.integer.ticks_per_period);
         this.dayNightCycleMediator = new DayNightCycleMediator(ticksPerPeriod);
         ticker.register(this.dayNightCycleMediator);
 
@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
 
         ticker.register(gameView);
         this.dayNightCycleMediator.register(gameView);
+        this.dayNightCycleMediator.register(doge);
 
         /**
          * TODO: Exercise 2 -- MVP
@@ -149,8 +150,8 @@ public class MainActivity extends Activity {
      */
     private void createDoge(final int ticksPerPeriod) {
         // create Doge model
-        int ticksPerMoodSwing = ticksPerPeriod/getResources().getInteger(R.integer.mood_swings_per_period);
-        double moodSwingProbability = getResources().getInteger(R.integer.mood_swing_probability)/100.0;
+        int ticksPerMoodSwing = ticksPerPeriod/2; //getResources().getInteger(R.integer.mood_swings_per_period);
+        double moodSwingProbability = 80.0/100.0; //getResources().getInteger(R.integer.mood_swing_probability)/100.0;
         this.doge = new Doge(ticksPerMoodSwing, moodSwingProbability);
 
         // create Doge view
@@ -175,6 +176,12 @@ public class MainActivity extends Activity {
         stateCoords.put(Doge.State.SLEEPING,
                         new Coord(getResources().getInteger(R.integer.sleeping_x),
                                   getResources().getInteger(R.integer.sleeping_y)));
+
+        stateBitmaps.put(Doge.State.SAD,
+                        BitmapFactory.decodeResource(getResources(), R.drawable.sad_2x));
+        stateCoords.put(Doge.State.SAD,
+                        new Coord(getResources().getInteger(R.integer.sad_x),
+                                  getResources().getInteger(R.integer.sad_y)));
 
         // TODO: Exercise 2 - Set up sprite and coords for EATING state.
         // TODO: Exercise 3 - You may need to create the Factory of Strategies here
