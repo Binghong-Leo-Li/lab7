@@ -151,7 +151,7 @@ public class MainActivity extends Activity {
     private void createDoge(final int ticksPerPeriod) {
         // create Doge model
         int ticksPerMoodSwing = ticksPerPeriod/2; //getResources().getInteger(R.integer.mood_swings_per_period);
-        double moodSwingProbability = 80.0/100.0; //getResources().getInteger(R.integer.mood_swing_probability)/100.0;
+        double moodSwingProbability = 50.0/100.0; //getResources().getInteger(R.integer.mood_swing_probability)/100.0;
         this.doge = new Doge(ticksPerMoodSwing, moodSwingProbability);
 
         // create Doge view
