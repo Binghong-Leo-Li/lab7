@@ -176,7 +176,7 @@ public class MainActivity extends Activity implements ISubject<IActivityObserver
     private void createDoge(final int ticksPerPeriod) {
         // create Doge model
         int ticksPerMoodSwing = ticksPerPeriod/getResources().getInteger(R.integer.mood_swings_per_period);
-        double moodSwingProbability = 80/100.0;//getResources().getInteger(R.integer.mood_swing_probability)/100.0;
+        double moodSwingProbability = getResources().getInteger(R.integer.mood_swing_probability)/100.0;
         this.doge = new Doge(ticksPerMoodSwing, moodSwingProbability);
 
         // create Doge view
